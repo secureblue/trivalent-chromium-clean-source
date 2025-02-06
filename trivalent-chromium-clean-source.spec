@@ -23,10 +23,6 @@ BuildRequires: python3
 Vanilla chromium source, cleaned to reduce size and some proprietary bits.
 
 %build
-# obtain cleaning utilities
-git clone https://github.com/secureblue/trivalent-chromium-clean-source.git
-cp trivalent-chromium-clean-source/* .
-
 # obtain depot tools for obtaining source
 git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 export PATH="$(pwd)/depot_tools:$PATH"
@@ -44,11 +40,6 @@ gclient sync -D
 
 # clean
 rm -rf ./build/linux/debian_bullseye_amd64-sysroot ./build/linux/debian_bullseye_i386-sysroot ./third_party/node/linux/node-linux-x64 ./third_party/rust-toolchain ./third_party/rust-src
-chmod a+rx ./../../clean_ffmpeg.sh ./../../get_free_ffmpeg_source_files.py
-cp ./../../get_free_ffmpeg_source_files.py ./
-./../../clean_ffmpeg.sh . 0
-rm ./get_free_ffmpeg_source_files.py
-find ./third_party/openh264/src -type f -not -name '*.h' -delete
 
 # extra clean
 rm -rf ./media/test/data ./third_party/jdk/current ./third_party/liblouis/src/tests/braille-specs \
