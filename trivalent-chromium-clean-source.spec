@@ -27,7 +27,6 @@ Vanilla chromium source, cleaned to reduce size and some proprietary bits.
 git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 export PATH="$(pwd)/depot_tools:$PATH"
 mkdir chromium
-cp ffmpeg-clean.patch chromium/
 cd chromium
 
 # obtain source, specific version of source, and needed deps (hooks)
