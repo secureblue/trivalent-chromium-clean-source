@@ -25,6 +25,7 @@ Vanilla chromium source, cleaned to reduce size and some proprietary bits.
 %build
 # obtain depot tools for obtaining source
 git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+sleep 60
 export PATH="$(pwd)/depot_tools:$PATH"
 mkdir chromium
 cd chromium
