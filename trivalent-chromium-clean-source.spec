@@ -31,10 +31,14 @@ cd chromium
 
 # obtain source, specific version of source, and needed deps (hooks)
 fetch --nohooks --no-history chromium
+sleep 60
 cd src
 git fetch origin refs/tags/%{version}:refs/tags/%{version}
+sleep 60
 git checkout %{version}
+sleep 60
 gclient runhooks
+sleep 60
 gclient sync -D
 
 # clean
