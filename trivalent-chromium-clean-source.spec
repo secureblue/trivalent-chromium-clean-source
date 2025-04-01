@@ -57,7 +57,6 @@ rm -rf ./media/test/data ./third_party/jdk/current ./third_party/liblouis/src/te
        ./third_party/blink/web_tests ./third_party/catapult/tracing/test_data ./third_party/depot_tools/.cipd_bin
 
 # compress
-cd ..
 mv src/ chromium-%{version}/
 tar --exclude=\\.git -cf - chromium-%{version} | xz -9 -M 90% -T %{numjobs} -f > chromium-%{version}-clean.tar.xz
 mv chromium-%{version}-clean.tar.xz ./../
