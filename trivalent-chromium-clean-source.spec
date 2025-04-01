@@ -38,7 +38,10 @@ solutions = [
     "url": "https://chromium.googlesource.com/chromium/src.git",
     "managed": False,
     "custom_deps": {},
-    "custom_vars": {},
+    "custom_vars": {
+      "checkout_pgo_profiles": True, 
+      "checkout_nacl": False,
+    }
   },
 ]
 EOF
