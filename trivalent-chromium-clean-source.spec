@@ -25,21 +25,28 @@ Vanilla chromium source, cleaned to reduce size and some proprietary bits.
 %build
 # obtain depot tools for obtaining source
 git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-sleep 60
 export PATH="$(pwd)/depot_tools:$PATH"
 mkdir chromium
 cd chromium
 
 # obtain source, specific version of source, and needed deps (hooks)
-fetch --nohooks --no-history chromium
+#fetch --nohooks --no-history chromium
+cat >.gclient <<EOF
+solutions = [
+  {
+    "name": "src",
+    "url": "https://chromium.googlesource.com/chromium/src.git",
+    "managed": False,
+    "custom_deps": {},
+    "custom_vars": {},
+  },
+]
+EOF
 sleep 60
-cd src
-git fetch origin refs/tags/%{version}:refs/tags/%{version}
-sleep 60
-git checkout %{version}
+git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
 sleep 60
 gclient runhooks
-sleep 60
+sleep 300
 gclient sync -D --nohooks --no-history
 
 # clean
