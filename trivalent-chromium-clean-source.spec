@@ -42,12 +42,8 @@ solutions = [
   },
 ]
 EOF
-sleep 60
 git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
-sleep 300
-gclient sync -D --nohooks --no-history
-sleep 300
-gclient runhooks
+gclient sync --no-history
 
 # clean
 rm -rf ./build/linux/debian_bullseye_amd64-sysroot ./build/linux/debian_bullseye_i386-sysroot ./third_party/node/linux/node-linux-x64 ./third_party/rust-toolchain ./third_party/rust-src
