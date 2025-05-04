@@ -48,12 +48,12 @@ EOF
 git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
 gclient sync --no-history
 
-# clean
-rm -rf ./build/linux/debian_bullseye_amd64-sysroot ./build/linux/debian_bullseye_i386-sysroot ./third_party/node/linux/node-linux-x64 ./third_party/rust-toolchain ./third_party/rust-src
+# clean sysroots (we don't need)
+rm -rf ./src/build/linux/debian_bullseye_amd64-sysroot ./src/build/linux/debian_bullseye_i386-sysroot
 
-# extra clean
-rm -rf ./media/test/data ./third_party/jdk/current ./third_party/liblouis/src/tests/braille-specs \
-       ./third_party/blink/web_tests ./third_party/catapult/tracing/test_data ./third_party/depot_tools/.cipd_bin
+# extra clean (bug stuff that takes up space
+rm -rf ./src/media/test/data ./src/third_party/jdk/current ./src/third_party/liblouis/src/tests/braille-specs \
+       ./src/third_party/blink/web_tests ./src/third_party/catapult/tracing/test_data ./src/third_party/depot_tools
 
 # compress
 mv src/ chromium-%{version}/
