@@ -51,9 +51,8 @@ gclient sync --no-history
 # clean sysroots (we don't need)
 rm -rf ./src/build/linux/debian_bullseye_amd64-sysroot ./src/build/linux/debian_bullseye_i386-sysroot
 
-# extra clean (bug stuff that takes up space
-rm -rf ./src/media/test/data ./src/third_party/jdk/current ./src/third_party/liblouis/src/tests/braille-specs \
-       ./src/third_party/blink/web_tests ./src/third_party/catapult/tracing/test_data ./src/third_party/depot_tools
+# extra clean (big stuff that takes up space)
+rm -rf ./src/third_party/jdk/current ./src/third_party/blink/web_tests ./src/third_party/catapult/tracing/test_data \ ./src/third_party/depot_tools ./src/buildtools/reclient ./src/third_party/instrumented_libs
 
 # compress
 mv src/ chromium-%{version}/
