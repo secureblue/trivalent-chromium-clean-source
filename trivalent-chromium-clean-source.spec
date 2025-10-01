@@ -48,9 +48,6 @@ EOF
 git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
 gclient sync --no-history
 
-# clean sysroots (we don't need)
-rm -rf ./src/build/linux/debian_bullseye_amd64-sysroot ./src/build/linux/debian_bullseye_i386-sysroot
-
 # extra clean (big stuff that takes up space)
 rm -rf ./src/third_party/jdk/current ./src/third_party/blink/web_tests ./src/third_party/catapult/tracing/test_data ./src/third_party/depot_tools/.cipd_bin ./src/buildtools/reclient ./src/third_party/instrumented_libs
 
