@@ -4,13 +4,25 @@ Source0: chromium-version.txt
 
 Name:	 trivalent-chromium-clean-source
 %{lua:
-       local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
-       local content = f:read "*all"
-       -- This will dynamically set the version based on chromium's latest stable release channel
-       print("Version: "..content.."\n")
+        local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
+        local version_tag = f:read "*all"
 
-       -- This will automatically increment the release every ~32 minutes
-       print("Release: "..(os.time() // 2000).."\n")
+        -- This IS NOT the version of the browser
+        -- It is only used if it is greater than the automated version detection
+        -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
+        local off_version_tag = "0" -- "142.0.7444.52"
+
+        -- Strip the dots to make it just a number and compare
+        -- If greater than, we use the off-version
+        if string.gsub(off_version_tag, "%.", "") > string.gsub(version_tag, "%.", "") then
+            version_tag = off_version_tag
+        end
+
+        -- This will dynamically set the version based on chromium's latest stable release channel
+        print("Version: "..version_tag.."\n")
+
+        -- This will automatically increment the release every ~32 minutes
+        print("Release: "..(os.time() // 2000).."\n")
 }
 Summary: Chromium's source tarball.
 Url:     http://www.chromium.org/Home
