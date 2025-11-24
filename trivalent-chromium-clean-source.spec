@@ -28,7 +28,7 @@ Name:	 trivalent-chromium-clean-source
   for i = 1, # vt do
     if vt[i] > ovt[i] then
       break
-    else if ovt[i] > vt[i] then
+    elseif ovt[i] > vt[i] then
       version_tag = off_version_tag
       break
     end
