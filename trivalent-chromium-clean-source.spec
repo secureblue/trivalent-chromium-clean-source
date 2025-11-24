@@ -13,7 +13,7 @@ Name:	 trivalent-chromium-clean-source
     end
     return a
   end
-  
+
   local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
   local version_tag = f:read "*all"
 
