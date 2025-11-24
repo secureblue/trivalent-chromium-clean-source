@@ -7,7 +7,7 @@ Name:	 trivalent-chromium-clean-source
   function splitVersionTag(vtag)
     local a = {}
     local i = 1
-    for n in string.gmatch(vtag, ".")
+    for n in string.gmatch(vtag, ".") do
       a[i] = n
       i = i + 1
     end
@@ -25,7 +25,7 @@ Name:	 trivalent-chromium-clean-source
   local vt = splitVersionTag(version_tag)
   local ovt = splitVersionTag(off_version_tag)
 
-  for i = 1, # vt
+  for i = 1, # vt do
     if vt[i] > ovt[i] then
       break
     else if ovt[i] > vt[i] then
