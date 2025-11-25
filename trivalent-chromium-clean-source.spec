@@ -4,25 +4,41 @@ Source0: chromium-version.txt
 
 Name:	 trivalent-chromium-clean-source
 %{lua:
-        local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
-        local version_tag = f:read "*all"
+  function splitVersionTag(vtag)
+    local vtag_array = {}
+    local index = 1
+    for version_block in string.gmatch(vtag, ".") do
+      vtag_array[index] = version_block
+      index = index + 1
+    end
+    return vtag_array
+  end
 
-        -- This IS NOT the version of the browser
-        -- It is only used if it is greater than the automated version detection
-        -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
-        local off_version_tag = "141.0.7390.127" -- "142.0.7444.52"
+  local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
+  local version_tag = f:read "*all"
 
-        -- Strip the dots to make it just a number and compare
-        -- If greater than, we use the off-version
-        if string.gsub(off_version_tag, "%.", "") > string.gsub(version_tag, "%.", "") then
-            version_tag = off_version_tag
-        end
+  -- This IS NOT the version of the browser
+  -- It is only used if it is greater than the automated version detection
+  -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
+  local off_version_tag = "141.0.7390.127"
 
-        -- This will dynamically set the version based on chromium's latest stable release channel
-        print("Version: "..version_tag.."\n")
+  local vt = splitVersionTag(version_tag)
+  local ovt = splitVersionTag(off_version_tag)
 
-        -- This will automatically increment the release every ~32 minutes
-        print("Release: "..(os.time() // 2000).."\n")
+  for i = 1, # vt do
+    if vt[i] > ovt[i] then
+      break
+    elseif ovt[i] > vt[i] then
+      version_tag = off_version_tag
+      break
+    end
+  end
+
+  -- This will dynamically set the version based on chromium's latest stable release channel
+  print("Version: "..version_tag.."\n")
+
+  -- This will automatically increment the release every ~32 minutes
+  print("Release: "..(os.time() // 2000).."\n")
 }
 Summary: Chromium's source tarball.
 Url:     http://www.chromium.org/Home
