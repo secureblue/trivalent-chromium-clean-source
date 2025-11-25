@@ -5,13 +5,13 @@ Source0: chromium-version.txt
 Name:	 trivalent-chromium-clean-source
 %{lua:
   function splitVersionTag(vtag)
-    local a = {}
-    local i = 1
-    for n in string.gmatch(vtag, ".") do
-      a[i] = n
-      i = i + 1
+    local vtag_array = {}
+    local index = 1
+    for version_block in string.gmatch(vtag, ".") do
+      vtag_array[index] = version_block
+      index = index + 1
     end
-    return a
+    return vtag_array
   end
 
   local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
