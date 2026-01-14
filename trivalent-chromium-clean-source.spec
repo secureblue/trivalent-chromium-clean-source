@@ -20,7 +20,7 @@ Name:	 trivalent-chromium-clean-source
   -- This IS NOT the version of the browser
   -- It is only used if it is greater than the automated version detection
   -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
-  local off_version_tag = "141.0.7390.127"
+  local off_version_tag = "144.0.7559.59"
 
   local vt = splitVersionTag(version_tag)
   local ovt = splitVersionTag(off_version_tag)
