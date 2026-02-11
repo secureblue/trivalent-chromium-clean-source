@@ -90,6 +90,8 @@ mv chromium-%{version}-clean.tar.xz ./../
 %install
 mkdir -p %{buildroot}%{_usrsrc}/chromium/
 install -m 0644 chromium-%{version}-clean.tar.xz %{buildroot}%{_usrsrc}/chromium/
+install -m 0644 %{SOURCE0} %{_usrsrc}/chromium/chromium-version.txt
 
 %files
 %{_usrsrc}/chromium/chromium-%{version}-clean.tar.xz
+%{_usrsrc}/chromium/chromium-version.txt
