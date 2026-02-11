@@ -88,9 +88,10 @@ tar --exclude=\\.git -cf - chromium-%{version} | xz -9 -M 90% -T %{numjobs} -f >
 mv chromium-%{version}-clean.tar.xz ./../
 
 %install
-mkdir -p %{buildroot}%{_usrsrc}/chromium/
-install -m 0644 chromium-%{version}-clean.tar.xz %{buildroot}%{_usrsrc}/chromium/
-install -m 0644 %{SOURCE0} %{_usrsrc}/chromium/chromium-version.txt
+declare -r installDir="%{buildroot}%{_usrsrc}/chromium/"
+mkdir -p "${installDir}"
+install -m 0644 chromium-%{version}-clean.tar.xz "${installDir}"
+install -m 0644 %{SOURCE0} "${installDir}"
 
 %files
 %{_usrsrc}/chromium/chromium-%{version}-clean.tar.xz
