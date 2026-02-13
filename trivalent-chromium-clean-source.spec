@@ -21,6 +21,10 @@ Name:	 trivalent-chromium-clean-source
   -- It is only used if it is greater than the automated version detection
   -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
   local off_version_tag = "144.0.7559.59"
+  -- This was added because Google shipped an update but forgot to ship a security fix:
+  --   https://github.com/uazo/cromite/issues/2427
+  -- And didn't ship said update in stable.
+  -- Instead just pushed the fix the next major version instead.
 
   local vt = splitVersionTag(version_tag)
   local ovt = splitVersionTag(off_version_tag)
@@ -88,8 +92,11 @@ tar --exclude=\\.git -cf - chromium-%{version} | xz -9 -M 90% -T %{numjobs} -f >
 mv chromium-%{version}-clean.tar.xz ./../
 
 %install
-mkdir -p %{buildroot}%{_usrsrc}/chromium/
-install -m 0644 chromium-%{version}-clean.tar.xz %{buildroot}%{_usrsrc}/chromium/
+declare -r installDir="%{buildroot}%{_usrsrc}/chromium/"
+mkdir -p "${installDir}"
+install -m 0644 chromium-%{version}-clean.tar.xz "${installDir}"
+install -m 0644 %{SOURCE0} "${installDir}"
 
 %files
 %{_usrsrc}/chromium/chromium-%{version}-clean.tar.xz
+%{_usrsrc}/chromium/chromium-version.txt
