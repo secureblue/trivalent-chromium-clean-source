@@ -16,7 +16,7 @@ Name:	 trivalent-chromium-clean-source
 
   local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'r')
   local version_tag = f:read "*all"
-
+  f:close()
   -- This IS NOT the version of the browser
   -- It is only used if it is greater than the automated version detection
   -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
@@ -34,6 +34,9 @@ Name:	 trivalent-chromium-clean-source
       break
     elseif ovt[i] > vt[i] then
       version_tag = off_version_tag
+      local f = io.open(macros['_sourcedir']..'/chromium-version.txt', 'w')
+      f:write(off_version_tag)
+      f:close()
       break
     end
   end
