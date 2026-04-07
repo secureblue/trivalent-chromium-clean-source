@@ -70,7 +70,7 @@ cat >.gclient <<EOF
 solutions = [
   {
     "name": "src",
-    "url": "https://github.com/chromium/chromium.git",
+    "url": "https://chromium.googlesource.com/chromium/src.git",
     "managed": False,
     "custom_deps": {},
     "custom_vars": {
@@ -80,7 +80,7 @@ solutions = [
   },
 ]
 EOF
-git clone -b %{version} --depth=2 https://github.com/chromium/chromium
+git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
 gclient sync --no-history
 
 # clean sysroots (we don't need)
@@ -90,7 +90,7 @@ rm -rf ./src/build/linux/debian_bullseye_*-sysroot
 rm -rf ./src/third_party/jdk/current ./src/third_party/catapult/tracing/test_data ./src/third_party/depot_tools/.cipd_bin ./src/buildtools/reclient ./src/third_party/instrumented_libs
 
 # compress
-mv chromium/ chromium-%{version}/
+mv src/ chromium-%{version}/
 tar --exclude=\\.git -cf - chromium-%{version} | xz -9 -M 90% -T %{numjobs} -f > chromium-%{version}-clean.tar.xz
 mv chromium-%{version}-clean.tar.xz ./../
 
