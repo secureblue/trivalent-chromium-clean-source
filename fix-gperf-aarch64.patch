@@ -1,0 +1,151 @@
+diff --git b/DEPS a/DEPS
+index 894a1afa992cb..eb69c0bf56fd6 100644
+--- b/DEPS
++++ a/DEPS
+@@ -2174,23 +2174,11 @@ deps = {
+   'src/third_party/googletest/src':
+     Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + Var('googletest_revision'),
+ 
+-  # TODO: crbug.com/431264806 - Switch to CIPD package for Windows builds.
+   'src/third_party/gperf': {
+       'url': Var('chromium_git') + '/chromium/deps/gperf.git' + '@' + 'e9eeea862a18e77b945d98eff7e1bf065d3daf8e',
+       'condition': 'checkout_win',
+   },
+ 
+-  'src/third_party/gperf/cipd': {
+-      'packages': [
+-        {
+-          'package': 'infra/3pp/tools/gperf/${{platform}}',
+-          'version': 'version:3@3.2',
+-        },
+-      ],
+-      'condition': 'host_os == "linux"',
+-      'dep_type': 'cipd',
+-  },
+-
+   'src/third_party/cardboard/src' : {
+       'url': Var('chromium_git') + '/external/github.com/googlevr/cardboard/' + '@' + '02708c9018d5b7976dd87412be5b916dce379c53',
+       'condition': 'checkout_android',
+diff --git b/third_party/blink/renderer/build/scripts/scripts.gni a/third_party/blink/renderer/build/scripts/scripts.gni
+index 564cd1eb4a7de..31916c877e6a7 100644
+--- b/third_party/blink/renderer/build/scripts/scripts.gni
++++ a/third_party/blink/renderer/build/scripts/scripts.gni
+@@ -78,22 +78,15 @@ make_trie_helpers_files =
+ # The executables are relative to the build directory. Don't rebase it because
+ # on Posix we want to run the system one on the path.
+ if (host_os == "win") {
+-  # TODO: crbug.com/431264806 - Switch to CIPD package.
+-  gperf_exe = "//third_party/gperf/bin/gperf.exe"
++  gperf_exe = rebase_path("//third_party/gperf/bin/gperf.exe", root_build_dir)
+ } else if (is_ios) {
+-  gperf_exe = "$ios_toolchains_path/usr/bin/gperf"
++  gperf_exe = ios_bin_path + "gperf"
+ } else if (host_os == "mac") {
+   # TODO(thakis): This should probably run in the host toolchain and check
+   # is_mac instead of checking host_os.
+-  if (use_system_xcode) {
+-    _mac_bin_path = mac_bin_path
+-  } else {
+-    _mac_bin_path = rebase_path(mac_bin_path, "//", root_build_dir)
+-    _mac_bin_path = "//$_mac_bin_path"
+-  }
+-  gperf_exe = _mac_bin_path + "gperf"
++  gperf_exe = mac_bin_path + "gperf"
+ } else {
+-  gperf_exe = "//third_party/gperf/cipd/bin/gperf"
++  gperf_exe = "gperf"
+ }
+ 
+ # Templates --------------------------------------------------------------------
+@@ -163,6 +156,7 @@ template("blink_python_runner") {
+ template("process_json5_files") {
+   blink_python_runner(target_name) {
+     script = invoker.script
++
+     inputs = invoker.in_files
+     if (defined(invoker.other_inputs)) {
+       inputs += invoker.other_inputs
+@@ -187,11 +181,7 @@ template("process_json5_files") {
+     } else {
+       deps = make_core_generated_deps
+     }
+-    forward_variables_from(invoker,
+-                           [
+-                             "sources",
+-                             "visibility",
+-                           ])
++    forward_variables_from(invoker, [ "visibility" ])
+   }
+ }
+ 
+@@ -231,11 +221,7 @@ template("code_generator") {
+     } else {
+       deps = make_core_generated_deps
+     }
+-    forward_variables_from(invoker,
+-                           [
+-                             "sources",
+-                             "visibility",
+-                           ])
++    forward_variables_from(invoker, [ "visibility" ])
+   }
+ }
+ 
+@@ -259,9 +245,8 @@ template("css_properties") {
+     }
+     other_args = [
+       "--gperf",
+-      rebase_path(gperf_exe, root_build_dir),
++      gperf_exe,
+     ]
+-    sources = [ gperf_exe ]
+     outputs = invoker.outputs
+   }
+ }
+diff --git b/third_party/blink/renderer/core/BUILD.gn a/third_party/blink/renderer/core/BUILD.gn
+index a0bcc00da8587..9b399ad326a19 100644
+--- b/third_party/blink/renderer/core/BUILD.gn
++++ a/third_party/blink/renderer/core/BUILD.gn
+@@ -865,9 +865,8 @@ code_generator("make_core_generated_atrule_names") {
+   ]
+   other_args = [
+     "--gperf",
+-    rebase_path(gperf_exe, root_build_dir),
++    gperf_exe,
+   ]
+-  sources = [ gperf_exe ]
+ }
+ 
+ code_generator("make_core_generated_media_features") {
+@@ -925,9 +924,8 @@ code_generator("make_core_generated_css_value_keywords") {
+   ]
+   other_args = [
+     "--gperf",
+-    rebase_path(gperf_exe, root_build_dir),
++    gperf_exe,
+   ]
+-  sources = [ gperf_exe ]
+ }
+ 
+ process_json5_files("make_core_generated_html_element_factory") {
+diff --git b/third_party/blink/renderer/platform/BUILD.gn a/third_party/blink/renderer/platform/BUILD.gn
+index be7ec83de804f..784ce295c0bca 100644
+--- b/third_party/blink/renderer/platform/BUILD.gn
++++ a/third_party/blink/renderer/platform/BUILD.gn
+@@ -104,7 +104,6 @@ blink_python_runner("runtime_feature_state_override_context") {
+ 
+ blink_python_runner("color_data") {
+   script = "../build/scripts/gperf.py"
+-  sources = [ gperf_exe ]
+ 
+   color_data_gperf = "color_data.gperf"
+   inputs = [
+@@ -116,7 +115,7 @@ blink_python_runner("color_data") {
+   outputs = [ output_file ]
+ 
+   args = [
+-    rebase_path(gperf_exe, root_build_dir),
++    gperf_exe,
+     "--key-positions=*",
+     "-D",
+     "-s",

@@ -1,6 +1,7 @@
 %global numjobs %{_smp_build_ncpus}
 
 Source0: chromium-version.txt
+Source1: fix-gperf-aarch64.patch
 
 Name:	 trivalent-chromium-clean-source
 %{lua:
@@ -81,6 +82,9 @@ solutions = [
 ]
 EOF
 git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
+%ifarch aarch64
+patch -d src -p1 < %{SOURCE1}
+%endif
 gclient sync --no-history
 
 # clean sysroots (we don't need)
