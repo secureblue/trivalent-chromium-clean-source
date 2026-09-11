@@ -84,6 +84,7 @@ solutions = [
 EOF
 git clone -b %{version} --depth=2 https://chromium.googlesource.com/chromium/src
 gclient sync --no-history
+./src/build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
 
 # clean sysroots (we don't need)
 rm -rf ./src/build/linux/debian_bullseye_i386-sysroot
