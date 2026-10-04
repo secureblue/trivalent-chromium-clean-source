@@ -20,7 +20,7 @@ Name:	 trivalent-chromium-clean-source
   -- This IS NOT the version of the browser
   -- It is only used if it is greater than the automated version detection
   -- The point is to update to an arbitrary greater release tag, like early stable or beta tags
-  local off_version_tag = "154.0.8037.17"
+  local off_version_tag = "155.0.8059.12"
   -- This was added because Google shipped an update but forgot to ship a security fix:
   --   https://github.com/uazo/cromite/issues/2427
   -- And didn't ship said update in stable.
